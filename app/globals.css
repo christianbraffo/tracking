@@ -1,26 +1,63 @@
 @import "tailwindcss";
 
+/* Sombre : nuit bleue + argent */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #0a0f1a;
+  --fg: #e8edf5;
+  --muted: #8f9bb0;
+  --surface: rgba(201, 212, 228, 0.05);
+  --surface-2: rgba(201, 212, 228, 0.1);
+  --line: rgba(201, 212, 228, 0.14);
+  --accent: #8fb0e0;
+  --accent2: #c9d3e3;
+  --on-accent: #0a0f1a;
+  --ok: #6fcf97;
+  --warn: #e9b86a;
+  --bad: #f08a8a;
+  --glow1: rgba(110, 150, 220, 0.22);
+  --glow2: rgba(201, 211, 227, 0.1);
+}
+
+/* Clair : perle argentee + chocolat */
+:root[data-theme="light"] {
+  --bg: #eceae7;
+  --fg: #2b1d16;
+  --muted: #7a6a60;
+  --surface: rgba(255, 255, 255, 0.65);
+  --surface-2: rgba(91, 58, 41, 0.08);
+  --line: rgba(91, 58, 41, 0.16);
+  --accent: #5b3a29;
+  --accent2: #a67c5b;
+  --on-accent: #fbf6f0;
+  --ok: #2f7d4f;
+  --warn: #a8661c;
+  --bad: #b3402f;
+  --glow1: rgba(166, 124, 91, 0.2);
+  --glow2: rgba(180, 190, 205, 0.45);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent2: var(--accent2);
+  --color-on-accent: var(--on-accent);
+  --color-ok: var(--ok);
+  --color-warn: var(--warn);
+  --color-bad: var(--bad);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--fg);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  background:
+    radial-gradient(900px 500px at 10% -10%, var(--glow1), transparent 60%),
+    radial-gradient(700px 500px at 100% 10%, var(--glow2), transparent 60%),
+    var(--bg);
+  background-attachment: fixed;
+  min-height: 100vh;
+  transition: background-color 0.3s, color 0.3s;
 }
