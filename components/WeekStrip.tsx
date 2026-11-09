@@ -36,7 +36,7 @@ export default function WeekStrip({
           <button onClick={() => setOffset(offset + 1)} className="h-6 w-6 rounded bg-surface-2 hover:opacity-80" aria-label="Semaine suivante">›</button>
         </span>
       </div>
-      <div className="grid grid-cols-7 gap-1.5">
+      <div className="grid grid-cols-7 gap-1 sm:gap-1.5">
         {days.map((d) => {
           const key = isoDay(d);
           const planned = posts.filter((p) => p.status !== "done" && p.scheduled_for === key).length;
@@ -47,7 +47,7 @@ export default function WeekStrip({
               key={key}
               whileTap={{ scale: 0.93 }}
               onClick={() => onSelect(on ? null : key)}
-              className="flex flex-col items-center rounded-xl border py-2 text-xs"
+              className="flex min-w-0 flex-col items-center rounded-xl border py-2 text-xs"
               style={{
                 borderColor: on ? "var(--accent)" : key === today ? "var(--accent2)" : "var(--line)",
                 background: on ? "var(--surface-2)" : "transparent",

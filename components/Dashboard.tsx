@@ -165,22 +165,22 @@ export default function Dashboard({ userId }: { userId: string }) {
   const maxWeek = Math.max(1, ...stats.weeks.map((w) => w.count));
 
   return (
-    <div className="mx-auto max-w-3xl px-4 pb-24 pt-8">
+    <div className="mx-auto w-full max-w-3xl px-4 pt-6 sm:pt-8" style={{ paddingBottom: "max(6rem, env(safe-area-inset-bottom))" }}>
       {/* header */}
-      <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-6 flex items-center justify-between">
-        <div className="flex items-center gap-3">
+      <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-6 flex items-start justify-between gap-3">
+        <div className="flex min-w-0 items-center gap-3">
           <EmojiPicker value={me?.emoji ?? "😊"} onPick={setEmoji} />
-          <div>
-          <h1 className="text-2xl font-bold">Salut {me?.name ?? ""} 👋</h1>
+          <div className="min-w-0">
+          <h1 className="truncate text-xl font-bold sm:text-2xl">Salut {me?.name ?? ""} 👋</h1>
           <p className="text-sm text-muted">
             {together > 0 ? `${together} posts publiés ensemble cette semaine` : "Aucun post publié cette semaine. À vous de jouer !"}
           </p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-2">
           <ThemeToggle />
-          <button onClick={() => supabase.auth.signOut()} className="rounded-lg border border-line px-3 py-1.5 text-sm text-muted hover:bg-surface-2">
-            Déconnexion
+          <button onClick={() => supabase.auth.signOut()} aria-label="Déconnexion" className="h-9 rounded-lg border border-line px-3 text-sm text-muted hover:bg-surface-2">
+            <span className="hidden sm:inline">Déconnexion</span><span className="sm:hidden">⎋</span>
           </button>
         </div>
       </motion.div>
@@ -196,17 +196,17 @@ export default function Dashboard({ userId }: { userId: string }) {
             initial={{ opacity: 0, scale: 0.92 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.1 * i, type: "spring", stiffness: 140, damping: 16 }}
-            className="flex items-center gap-3 rounded-2xl border border-line bg-surface p-4 backdrop-blur"
+            className="flex min-w-0 flex-col items-center gap-2 rounded-2xl border border-line bg-surface p-3 text-center backdrop-blur sm:flex-row sm:gap-3 sm:p-4 sm:text-left"
           >
             <Ring value={x.s.week} goal={x.p?.weekly_goal ?? 3} color={x.color} />
-            <div className="min-w-0">
-              <div className="flex items-center gap-1.5 truncate font-semibold"><Avatar value={x.p?.emoji} size={24} fallback="⏳" /> <span className="truncate">{x.label}</span></div>
+            <div className="min-w-0 max-w-full">
+              <div className="flex items-center justify-center gap-1.5 truncate font-semibold sm:justify-start"><Avatar value={x.p?.emoji} size={24} fallback="⏳" /> <span className="truncate">{x.label}</span></div>
               <div className="text-sm text-muted">🔥 {x.s.streak} sem. d&apos;affilée</div>
               {i === 0 && (
-                <div className="mt-1 flex items-center gap-1 text-xs text-muted">
+                <div className="mt-1 flex items-center justify-center gap-1 text-xs text-muted sm:justify-start">
                   Objectif
-                  <button onClick={() => setGoal((me?.weekly_goal ?? 3) - 1)} className="h-5 w-5 rounded bg-surface-2 hover:bg-surface-2">−</button>
-                  <button onClick={() => setGoal((me?.weekly_goal ?? 3) + 1)} className="h-5 w-5 rounded bg-surface-2 hover:bg-surface-2">+</button>
+                  <button onClick={() => setGoal((me?.weekly_goal ?? 3) - 1)} className="h-7 w-7 rounded bg-surface-2 hover:bg-surface-2">−</button>
+                  <button onClick={() => setGoal((me?.weekly_goal ?? 3) + 1)} className="h-7 w-7 rounded bg-surface-2 hover:bg-surface-2">+</button>
                 </div>
               )}
             </div>
@@ -280,9 +280,9 @@ export default function Dashboard({ userId }: { userId: string }) {
 
       {/* view switch */}
       <LayoutGroup id="view">
-        <div className="mb-4 flex gap-2">
+        <div className="mb-4 flex flex-wrap gap-2">
           {(["me", "partner"] as const).map((v) => (
-            <button key={v} onClick={() => { setView(v); setThemeFilter("all"); }} className="relative rounded-xl px-4 py-2 text-sm font-medium">
+            <button key={v} onClick={() => { setView(v); setThemeFilter("all"); }} className="relative min-w-0 max-w-full rounded-xl px-4 py-2 text-sm font-medium">
               {view === v && (
                 <motion.span layoutId="viewpill" className="absolute inset-0 rounded-xl bg-surface-2" transition={{ type: "spring", stiffness: 400, damping: 30 }} />
               )}
@@ -309,7 +309,7 @@ export default function Dashboard({ userId }: { userId: string }) {
 
       {/* 8 weeks chart */}
       <div className="mb-6 rounded-2xl border border-line bg-surface p-4">
-        <div className="mb-2 flex justify-between text-xs text-muted">
+        <div className="mb-2 flex flex-wrap justify-between gap-x-3 gap-y-1 text-xs text-muted">
           <span>8 dernières semaines</span>
           <span>
             <span style={{ color: PLAT.fb.color }}>● FB {stats.fb}</span> · <span style={{ color: PLAT.li.color }}>● LinkedIn {stats.li}</span>
@@ -377,7 +377,7 @@ export default function Dashboard({ userId }: { userId: string }) {
                   }
                 }}
                 placeholder="Nom du thème + Entrée"
-                className="w-44 rounded-full border border-line bg-transparent px-3 py-0.5 text-xs outline-none focus:border-accent"
+                className="w-full max-w-full rounded-full border border-line bg-transparent px-3 py-1 text-xs outline-none focus:border-accent sm:w-44"
               />
             )}
           </div>
@@ -397,17 +397,17 @@ export default function Dashboard({ userId }: { userId: string }) {
           </div>
           <div className="mt-2 flex flex-wrap items-center gap-2">
             <LayoutGroup id="plat">
-              <div className="flex rounded-xl border border-line bg-surface p-1 text-sm">
+              <div className="flex w-full flex-wrap rounded-xl border border-line bg-surface p-1 text-sm sm:w-auto">
                 {(
                   [
                     ["fb", ["fb"], "Facebook"],
                     ["li", ["li"], "LinkedIn"],
-                    ["both", ["fb", "li"], "⚡ Les deux en même temps"],
+                    ["both", ["fb", "li"], "⚡ Les deux"],
                   ] as [string, Platform[], string][]
                 ).map(([key, val, label]) => {
                   const on = plats.length === val.length && val.every((x) => plats.includes(x));
                   return (
-                    <button key={key} onClick={() => setPlats(val)} className="relative rounded-lg px-3 py-1.5 transition-colors" style={{ color: on ? "var(--on-accent)" : "var(--muted)" }}>
+                    <button key={key} onClick={() => setPlats(val)} className="relative min-w-0 flex-1 rounded-lg px-3 py-1.5 transition-colors sm:flex-none" style={{ color: on ? "var(--on-accent)" : "var(--muted)" }}>
                       {on && (
                         <motion.span layoutId="platpill" className="absolute inset-0 rounded-lg bg-gradient-to-r from-accent to-accent2" transition={{ type: "spring", stiffness: 400, damping: 30 }} />
                       )}
@@ -421,7 +421,7 @@ export default function Dashboard({ userId }: { userId: string }) {
               {text.length ? `${text.length}${plats.includes("li") ? " / 3000" : ""}` : ""}
             </span>
           </div>
-          <div className="mt-3 flex justify-end gap-2">
+          <div className="mt-3 flex flex-wrap justify-end gap-2">
             {editId && (
               <button onClick={() => { setEditId(null); setText(""); setTheme(null); setScheduled(""); }} className="rounded-xl px-4 py-2 text-sm text-muted hover:bg-surface-2">
                 Annuler
@@ -458,7 +458,7 @@ export default function Dashboard({ userId }: { userId: string }) {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="🔍 Rechercher un post ou un thème…"
-          className="w-full rounded-xl border border-line bg-surface px-4 py-2 text-sm outline-none focus:border-accent"
+          className="w-full rounded-xl border border-line bg-surface py-2 pl-4 pr-28 text-sm outline-none focus:border-accent"
         />
         {(search || dayFilter) && (
           <button
@@ -471,7 +471,7 @@ export default function Dashboard({ userId }: { userId: string }) {
       </div>
 
       {/* filter */}
-      <div className="mb-3 flex gap-1 text-sm">
+      <div className="mb-3 flex gap-1 overflow-x-auto text-sm">
         {([["all", "Tous"], ["todo", "À poster"], ["done", "Publiés"]] as const).map(([k, l]) => (
           <button key={k} onClick={() => setFilter(k)} className={`rounded-lg px-3 py-1.5 ${filter === k ? "bg-surface-2 font-semibold" : "text-muted hover:text-fg"}`}>
             {l}
@@ -510,7 +510,7 @@ export default function Dashboard({ userId }: { userId: string }) {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, x: -40, scale: 0.95 }}
               transition={{ type: "spring", stiffness: 260, damping: 26 }}
-              className="rounded-2xl border border-line bg-surface p-4"
+              className="min-w-0 rounded-2xl border border-line bg-surface p-3 sm:p-4"
             >
               <div className="mb-2 flex flex-wrap items-center gap-2 text-xs text-muted">
                 {p.platforms.length === 2 ? (
@@ -544,8 +544,8 @@ export default function Dashboard({ userId }: { userId: string }) {
                 )}
                 <span>· créé {fmt(p.created_at)}</span>
               </div>
-              <p className="whitespace-pre-wrap break-words">{p.text}</p>
-              <div className="mt-3 flex flex-wrap gap-2 text-sm">
+              <p className="whitespace-pre-wrap break-words [overflow-wrap:anywhere]">{p.text}</p>
+              <div className="mt-3 flex flex-wrap gap-2 text-sm [&>button]:py-1.5">
                 {!readOnly &&
                   p.platforms.map((k) => {
                     const on = !!p.published?.[k];

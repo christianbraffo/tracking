@@ -26,7 +26,7 @@ export default function EmojiPicker({ value, onPick }: { value: string; onPick: 
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -8, scale: 0.94 }}
               transition={{ type: "spring", stiffness: 380, damping: 26 }}
-              className="absolute left-0 top-16 z-20 w-[19rem] rounded-2xl border border-line bg-[var(--bg)] p-3 shadow-2xl"
+              className="absolute left-0 top-16 z-20 w-[19rem] max-w-[calc(100vw-2rem)] rounded-2xl border border-line bg-[var(--bg)] p-3 shadow-2xl"
             >
               <p className="mb-2 text-xs text-muted">Choisis ton avatar</p>
               <div className="grid max-h-72 grid-cols-5 gap-1.5 overflow-y-auto pr-1">

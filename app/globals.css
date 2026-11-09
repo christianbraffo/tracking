@@ -59,5 +59,30 @@ body {
     var(--bg);
   background-attachment: fixed;
   min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  overflow-wrap: anywhere;
+  -webkit-text-size-adjust: 100%;
   transition: background-color 0.3s, color 0.3s;
+}
+
+html {
+  overflow-x: hidden;
+}
+
+/* Mobile : evite le zoom auto d'iOS dans les champs et le fond fixe qui saccade */
+@media (max-width: 640px) {
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+  body {
+    background-attachment: scroll;
+  }
+}
+
+input[type="date"] {
+  min-width: 0;
+  max-width: 100%;
 }

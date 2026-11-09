@@ -15,7 +15,7 @@ export default function Ring({
   const c = 2 * Math.PI * r;
   const pct = goal > 0 ? Math.min(value / goal, 1) : 0;
   return (
-    <div className="relative h-24 w-24 shrink-0">
+    <div className="relative h-20 w-20 shrink-0 sm:h-24 sm:w-24">
       <svg viewBox="0 0 100 100" className="-rotate-90">
         <circle cx="50" cy="50" r={r} fill="none" stroke="var(--line)" strokeWidth="9" />
         <motion.circle
@@ -36,7 +36,7 @@ export default function Ring({
         <span className="text-2xl font-bold">
           <Counter value={value} />
         </span>
-        <span className="mt-1 text-[10px] text-muted">/ {goal} cette sem.</span>
+        <span className="mt-1 text-[9px] text-muted sm:text-[10px]">/ {goal} sem.</span>
       </div>
     </div>
   );
