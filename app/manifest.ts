@@ -2,8 +2,8 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "PostSync",
-    short_name: "PostSync",
+    name: "Tandem",
+    short_name: "Tandem",
     description: "Suivi de posts à deux",
     start_url: "/",
     display: "standalone",

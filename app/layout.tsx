@@ -17,7 +17,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "PostSync",
+  title: "Tandem",
   description: "Suivi de posts à deux",
 };
 

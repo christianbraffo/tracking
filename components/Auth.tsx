@@ -54,8 +54,8 @@ export default function Auth() {
         className="w-full max-w-sm space-y-3 rounded-3xl border border-line bg-surface p-7 backdrop-blur-xl"
       >
         <div className="mb-2 text-center">
-          <div className="text-4xl">✍️</div>
-          <h1 className="mt-2 text-2xl font-bold">PostSync</h1>
+          <div className="text-4xl">🔗</div>
+          <h1 className="mt-2 text-2xl font-bold">Tandem</h1>
           <p className="text-sm text-muted">Écrivez, publiez, avancez ensemble.</p>
         </div>
         {mode === "up" && (
