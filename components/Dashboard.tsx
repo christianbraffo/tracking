@@ -7,9 +7,12 @@ import { computeStats } from "@/lib/stats";
 import type { Comment, Idea, Platform, Post, Profile, Reaction } from "@/lib/types";
 import Avatar from "./Avatar";
 import Counter from "./Counter";
+import DuoChallenge from "./DuoChallenge";
 import EmojiPicker from "./EmojiPicker";
 import IdeaBox from "./IdeaBox";
 import PostSocial from "./PostSocial";
+import Reminders from "./Reminders";
+import StatsPanel from "./StatsPanel";
 import Ring from "./Ring";
 import ThemeToggle from "./ThemeToggle";
 import WeekStrip, { isoDay } from "./WeekStrip";
@@ -49,20 +52,24 @@ export default function Dashboard({ userId }: { userId: string }) {
   const [search, setSearch] = useState("");
   const [dayFilter, setDayFilter] = useState<string | null>(null);
   const [scheduled, setScheduled] = useState("");
+  const [duoTarget, setDuoTarget] = useState(5);
+  const [showStats, setShowStats] = useState(false);
 
   const load = useCallback(async () => {
-    const [p, q, r, c, i] = await Promise.all([
+    const [p, q, r, c, i, dz] = await Promise.all([
       supabase.from("profiles").select("*"),
       supabase.from("posts").select("*").order("created_at", { ascending: false }),
       supabase.from("reactions").select("*"),
       supabase.from("comments").select("*").order("created_at", { ascending: true }),
       supabase.from("ideas").select("*").order("created_at", { ascending: false }),
+      supabase.from("duo_settings").select("weekly_target").maybeSingle(),
     ]);
     if (p.data) setProfiles(p.data as Profile[]);
     if (q.data) setPosts(q.data as Post[]);
     if (r.data) setReactions(r.data as Reaction[]);
     if (c.data) setComments(c.data as Comment[]);
     if (i.data) setIdeas(i.data as Idea[]);
+    if (dz.data?.weekly_target) setDuoTarget(dz.data.weekly_target);
   }, []);
 
   useEffect(() => {
@@ -73,6 +80,7 @@ export default function Dashboard({ userId }: { userId: string }) {
       .on("postgres_changes", { event: "*", schema: "public", table: "reactions" }, load)
       .on("postgres_changes", { event: "*", schema: "public", table: "comments" }, load)
       .on("postgres_changes", { event: "*", schema: "public", table: "ideas" }, load)
+      .on("postgres_changes", { event: "*", schema: "public", table: "duo_settings" }, load)
       .subscribe();
     return () => {
       supabase.removeChannel(ch);
@@ -156,6 +164,12 @@ export default function Dashboard({ userId }: { userId: string }) {
     load();
   }
 
+  async function setDuo(n: number) {
+    if (n < 1 || n > 60) return;
+    setDuoTarget(n);
+    await supabase.from("duo_settings").upsert({ id: 1, weekly_target: n });
+  }
+
   async function remove(id: string) {
     if (!confirm("Supprimer ce post ?")) return;
     await supabase.from("posts").delete().eq("id", id);
@@ -230,6 +244,10 @@ export default function Dashboard({ userId }: { userId: string }) {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <Reminders posts={myPosts} week={myStats.week} goal={me?.weekly_goal ?? 3} />
+
+      {partner && <DuoChallenge posts={posts} target={duoTarget} onChange={setDuo} />}
 
       {!partner && (
         <div className="mb-6 rounded-2xl border border-dashed border-line p-4 text-center text-sm text-muted">
@@ -306,6 +324,15 @@ export default function Dashboard({ userId }: { userId: string }) {
           </div>
         ))}
       </div>
+
+      <button
+        onClick={() => setShowStats((s) => !s)}
+        className="mb-3 flex w-full items-center justify-between rounded-2xl border border-line bg-surface px-4 py-2.5 text-sm font-semibold"
+      >
+        <span>📊 Statistiques {view === "me" ? "(moi)" : `(${partner?.name ?? "…"})`}</span>
+        <motion.span animate={{ rotate: showStats ? 180 : 0 }} className="text-xs text-muted">▾</motion.span>
+      </button>
+      {showStats && <StatsPanel stats={stats} />}
 
       {/* 8 weeks chart */}
       <div className="mb-6 rounded-2xl border border-line bg-surface p-4">
